@@ -55,12 +55,12 @@ in a pipeline for retrieving later (in the same or another pipeline).
 
 Remove from cache `name` file with path `filePath`.
 
-### cache.update(name, event)
+### cache.update(name)
 
 - `name` (required): the cache name
-- `event` (required): a watch event
 
-To use in `watch.on('change', ...)` in order to avoid boilerplate code.
+To use in `watch.on('change', ...)` in order to avoid boilerplate code. It will automatically remove files which have
+been deleted from cache `name`.
 
 ### cache.lastUpdated(name)
 
