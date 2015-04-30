@@ -69,7 +69,7 @@ been deleted from cache `name`.
 
 Returns the last time a cache was updated, can be used in lieu of `gulp.lastRun()`.
 
-### get(name)
+### cache.get(name)
 
 - `name` (optional): the cache name
 
