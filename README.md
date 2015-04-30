@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/troch/gulp-memory-cache.svg?branch=master)](https://travis-ci.org/troch/gulp-memory-cache)
+[![Coverage Status](https://coveralls.io/repos/troch/gulp-memory-cache/badge.svg)](https://coveralls.io/r/troch/gulp-memory-cache)
 
 # gulp-memory-cache
 
