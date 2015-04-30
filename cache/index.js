@@ -4,8 +4,15 @@ function Cache(compression) {
     this.compression = compression || false;
     this.cache = {};
 
+    this.lastUpdated = undefined;
+
+    this.updateLastUpdated = function () {
+        this.lastUpdated = Date.now();
+    };
+
     this.save = function (file) {
         this.cache[file.path] = file;
+        this.updateLastUpdated();
     };
 
     this.get = function (filePath) {
@@ -19,6 +26,7 @@ function Cache(compression) {
     this.remove = function (filePath) {
         if (this.cache[filePath]) {
             delete this.cache[filePath];
+            this.updateLastUpdated();
         }
     };
 }

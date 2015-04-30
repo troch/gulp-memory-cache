@@ -1,10 +1,13 @@
 var through = require('through2');
 var Cache   = require('./cache');
 
-module.exports = retrieveFromCache;
-module.exports.save = saveToCache;
-module.exports.forget = removeFromCache;
-module.exports.update = updateFromEvent;
+module.exports              = retrieveFromCache;
+module.exports.save         = saveToCache;
+module.exports.forget       = removeFromCache;
+module.exports.update       = updateFromEvent;
+module.exports.lastUpdated  = lastUpdated;
+
+var cache = {};
 
 /**
  * Save to cache files
@@ -86,3 +89,13 @@ function updateFromEvent(cacheName) {
         // TODO: clever insersion in cache to preserve natural file order?
     };
 }
+
+/**
+ * Get last time a cache was updated
+ */
+function lastUpdated(cacheName, timestamp) {
+    if (timestamp === undefined) {
+        return cache[cacheName].lastUpdated;
+    }
+    cache[cacheName].lastUpdated = timestamp;
+};

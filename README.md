@@ -14,7 +14,7 @@ var concat = require('gulp-concat');
 var cache  = require('gulp-memory-cache');
 
 gulp.task('buildJs', function () {
-    return gulp.src('src/**/*.js', {since: gulp.lastRun('build')})
+    return gulp.src('src/**/*.js', {since: gulp.lastRun('buildJs')})
         .pipe(jshint())
         .pipe(cache('js'))
         .pipe(concat('app.js'))
@@ -22,10 +22,8 @@ gulp.task('buildJs', function () {
 });
 
 gulp.task('watch', function () {
-    gulp
-        .watch('src/**/*.js', gulp.series('buildJs'))
+    gulp.watch('src/**/*.js', gulp.series('buildJs'))
         .on('change', cache.update('js'));
-    }
 });
 
 gulp.task('build', gulp.series('buildJs', 'watch'));
@@ -63,3 +61,9 @@ Remove from cache `name` file with path `filePath`.
 - `event` (required): a watch event
 
 To use in `watch.on('change', ...)` in order to avoid boilerplate code.
+
+### cache.lastUpdated(name)
+
+- `name` (required): the cache name
+
+Returns the last time a cache was updated.
