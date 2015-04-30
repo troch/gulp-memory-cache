@@ -1,5 +1,5 @@
 var through = require('through2');
-var Cache   = require('./Cache');
+var Cache   = require('./cache');
 
 module.exports = retrieveFromCache;
 module.exports.save = saveToCache;
@@ -36,7 +36,7 @@ function retrieveFromCache(cacheName, update) {
     // By default update cache
     update = update === undefined ? true : !!update;
     if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name to retrieve was supplied');
+        throw new Error('[gulp-memory-cache] No cache name was supplied');
     }
 
     if (!cache[cacheName]) {
@@ -65,7 +65,7 @@ function retrieveFromCache(cacheName, update) {
  */
 function removeFromCache(cacheName, filePath) {
     if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name was supplied when calling removeFromCache()');
+        throw new Error('[gulp-memory-cache] No cache name to remove from was supplied');
     }
 
     if (!filePath) {
@@ -78,7 +78,7 @@ function removeFromCache(cacheName, filePath) {
 /**
  * Remove file on change
  */
-function updateFromEvent(cacheName)
+function updateFromEvent(cacheName) {
     return function (evt) {
         if (event.type === 'deleted') {
             removeFromCache(cacheName, evt.path);

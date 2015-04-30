@@ -4,7 +4,7 @@
   "description": "A gulp plugin to cache files in memory",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,9 @@
   "homepage": "https://github.com/troch/gulp-memory-cache",
   "dependencies": {
     "through2": "^0.6.5"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.4",
+    "should": "^6.0.1"
   }
 }
