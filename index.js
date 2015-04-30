@@ -1,11 +1,12 @@
 var through = require('through2');
 var Cache   = require('./cache');
 
-module.exports              = retrieveFromCache;
+module.exports              = saveAndRetrieveFromCache;
 module.exports.save         = saveToCache;
 module.exports.forget       = removeFromCache;
 module.exports.update       = updateFromEvent;
 module.exports.lastUpdated  = lastUpdated;
+module.exports.get          = getCache;
 
 var cache = {};
 
@@ -28,44 +29,42 @@ function saveToCache(cacheName, compress) {
         }
 
         cache[cacheName].save(file);
-        cb();
+        cb(null, file);
     });
 }
 
 /**
  * Save to cache (optional) and add back all files in cache
  */
-function retrieveFromCache(cacheName, update) {
-    // By default update cache
-    update = update === undefined ? true : !!update;
+function saveAndRetrieveFromCache(cacheName, save) {
+    // By default save to cache
+    save = save === undefined ? true : !!save;
     if (!cacheName) {
         throw new Error('[gulp-memory-cache] No cache name was supplied');
     }
 
-    if (!cache[cacheName] && !update) {
-        throw new Error('[gulp-memory-cache] No cache with name ' + cacheName + ' was found');
-    }
-
-    if (!cache[cacheName] && update) {
+    if (!cache[cacheName]) {
         // TODO: compression option
         cache[cacheName] = new Cache();
     }
 
-    function ignoreOrUpdate(file, enc, cb) {
-        if (update) {
+    function saveOrIgnore(file, enc, cb) {
+        if (save) {
             cache[cacheName].save(file);
         }
         cb();
     }
 
-    function addFiles(cb) {
+    function addFilesFromCache(cb) {
+        var self = this;
         // Add all files from cache
         cache[cacheName].getFilePaths().forEach(function (filePath) {
-            this.push(cache[cacheName].get(filePath))
+            self.push(cache[cacheName].get(filePath))
         });
+        cb();
     }
 
-    return through.obj(ignoreOrUpdate, addFiles);
+    return through.obj(saveOrIgnore, addFilesFromCache);
 }
 
 /**
@@ -92,7 +91,7 @@ function updateFromEvent(cacheName) {
     }
 
     return function (evt) {
-        if (event.type === 'deleted') {
+        if (evt.type === 'deleted') {
             removeFromCache(cacheName, evt.path);
         }
         // TODO: clever insersion in cache to preserve natural file order?
@@ -108,3 +107,10 @@ function lastUpdated(cacheName, timestamp) {
     }
     cache[cacheName].lastUpdated = timestamp;
 };
+
+/**
+ * Get cache
+ */
+function getCache(cacheName) {
+    return cache[cacheName];
+}

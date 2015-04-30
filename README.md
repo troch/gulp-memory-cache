@@ -3,7 +3,7 @@
 # gulp-memory-cache
 
 A [gulp](https://github.com/gulpjs/gulp) plugin for caching files in memory to help with incremental building.
-It is aimed for Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful/).
+It is aimed for Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful.com/).
 
 ## Usage
 
@@ -32,13 +32,13 @@ gulp.task('build', gulp.series('buildJs', 'watch'));
 
 ## API
 
-### cache(name, update)
+### cache(name, save)
 
 - `name` (required): the cache name
-- `update` (optional, default to `true`): whether or not to update cache
+- `save` (optional, default to `true`): whether or not to save / update cache
 
-If `update` is truthy, it will saves streamed files to cache with name `name`.
-`cache()` then returns a stream containing all files in cache in the order they appeared.
+If `save` is truthy, it will save (update) streamed files to cache with name `name`.
+`cache()` then returns a stream containing all files in cache in the order they were added.
 
 ### cache.save(name)
 
