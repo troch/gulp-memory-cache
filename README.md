@@ -7,7 +7,7 @@ It is aimed for Gulp 4, see why: [Building with Gulp 4: Incremental builds](http
 
 ## Usage
 
-```
+```javascript
 var gulp   = require('gulp');
 var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
@@ -66,4 +66,4 @@ To use in `watch.on('change', ...)` in order to avoid boilerplate code.
 
 - `name` (required): the cache name
 
-Returns the last time a cache was updated.
+Returns the last time a cache was updated, can be used in lieu of `gulp.lastRun()`.

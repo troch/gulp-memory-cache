@@ -42,8 +42,13 @@ function retrieveFromCache(cacheName, update) {
         throw new Error('[gulp-memory-cache] No cache name was supplied');
     }
 
-    if (!cache[cacheName]) {
+    if (!cache[cacheName] && !update) {
         throw new Error('[gulp-memory-cache] No cache with name ' + cacheName + ' was found');
+    }
+
+    if (!cache[cacheName] && update) {
+        // TODO: compression option
+        cache[cacheName] = new Cache();
     }
 
     function ignoreOrUpdate(file, enc, cb) {
@@ -82,6 +87,10 @@ function removeFromCache(cacheName, filePath) {
  * Remove file on change
  */
 function updateFromEvent(cacheName) {
+    if (!cacheName) {
+        throw new Error('[gulp-memory-cache] No cache name was supplied when calling cache.update()');
+    }
+
     return function (evt) {
         if (event.type === 'deleted') {
             removeFromCache(cacheName, evt.path);
