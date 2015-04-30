@@ -1,4 +1,4 @@
-# This is a draft
+[![Build Status](https://travis-ci.org/troch/gulp-memory-cache.svg?branch=master)](https://travis-ci.org/troch/gulp-memory-cache)
 
 # gulp-memory-cache
 
