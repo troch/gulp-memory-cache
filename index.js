@@ -112,5 +112,5 @@ function lastUpdated(cacheName, timestamp) {
  * Get cache
  */
 function getCache(cacheName) {
-    return cache[cacheName];
+    return cacheName === undefined ? cache : cache[cacheName];
 }

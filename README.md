@@ -67,3 +67,9 @@ To use in `watch.on('change', ...)` in order to avoid boilerplate code.
 - `name` (required): the cache name
 
 Returns the last time a cache was updated, can be used in lieu of `gulp.lastRun()`.
+
+### get(name)
+
+- `name` (optional): the cache name
+
+Return cache named `name`, or all cached data if `name` is not supplied.
