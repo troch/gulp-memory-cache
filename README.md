@@ -5,7 +5,11 @@
 # gulp-memory-cache
 
 A [gulp](https://github.com/gulpjs/gulp) plugin for caching files in memory to help with incremental building.
-It is aimed for Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful.com/).
+
+It is aimed to be used with Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful.com/).
+
+If you are using Gulp 3, you will need to use `gulp-memory-cache` in combination with [`gulp-cached`](https://npmjs.com/package/gulp-cached) or similar.
+However be aware that both modules will maintain their own cache and therefore files are cached twice.
 
 ## Usage
 
