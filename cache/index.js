@@ -29,4 +29,29 @@ function Cache(compression) {
             this.updateLastUpdated();
         }
     };
+
+    this.getMtime = function (filePath) {
+        var file = this.get(filePath);
+        return file && file.stat ? file.stat.mtime : undefined;
+    };
+
+    this.getMostRecentMtime = function () {
+        var self = this;
+
+        var mtimes =this.getFilePaths()
+            .map(function (filePath) {
+                return self.getMtime(filePath);
+            })
+            .filter(function (mtime) {
+                return mtime !== undefined;
+            });
+
+        if (mtimes.length === 0) {
+            return undefined;
+        }
+
+        return mtimes.reduce(function (max, mtime) {
+            return mtime > max ? mtime : max;
+        });
+    };
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 var cache    = require('../');
+var Cache    = require('../cache');
 var through  = require('through2');
 var should   = require('should');
 var File     = require('vinyl');
@@ -63,7 +64,7 @@ describe('gulp-memory-cache', function () {
 
     describe('cache.save()', function () {
         it('should throw an exception if no cache name is supplied', function () {
-            cache.bind(cache.save).should.throw();
+            cache.save.bind(cache).should.throw();
         });
 
         it('should save new files to cache', function (done) {
@@ -83,18 +84,22 @@ describe('gulp-memory-cache', function () {
 
     describe('cache.forget()', function () {
         it('should throw an exception if no cache name is supplied', function () {
-            cache.bind(cache.forget).should.throw();
+            cache.forget.bind(cache).should.throw();
         });
 
         it('should remove file existing file from cache', function () {
             cache.forget('js2', 'file-0.js');
-            cache.get('js2').getFilePaths().length.should.not.containEql('file-0.js');
+            cache.get('js2').getFilePaths().should.not.containEql('file-0.js');
+        });
+
+        it ('should not throw an error when removing a file which is not in cache', function () {
+            cache.forget.bind(cache, 'js2', 'file-undefined.js').should.not.throw();
         });
     });
 
     describe('cache.update()', function () {
         it('should throw an exception if no cache name is supplied', function () {
-            cache.bind(cache.update).should.throw();
+            cache.update.bind(cache).should.throw();
         });
 
         it('should remove file if file has been deleted', function () {
@@ -104,27 +109,101 @@ describe('gulp-memory-cache', function () {
             };
             var fn = cache.update('js2');
             fn(evt);
-            cache.get('js2').getFilePaths().length.should.not.containEql('file-1.js');
+            cache.get('js2').getFilePaths().should.not.containEql('file-1.js');
+        });
+
+        it('should not remove file if event is not of type deleted', function () {
+            var evt = {
+                path: 'file-2.js',
+                type: 'hello'
+            };
+            var fn = cache.update('js2');
+            fn(evt);
+            cache.get('js2').getFilePaths().should.containEql('file-2.js');
         });
     });
 
     describe('cache.lastUpdated()', function () {
         it('should throw an exception if no cache name is supplied', function () {
-            cache.bind(cache.lastUpdated).should.throw();
+            cache.lastUpdated.bind(cache).should.throw();
+        });
+
+        it('should return undefined if cache doesn\'t exist', function () {
+            should.not.exist(cache.get('cache-cache'));
+            should.not.exist(cache.lastUpdated('cache-cache'));
+        });
+
+        it('should throw an exception if cache name doesn\'t exist when trying to update lastUpdated', function () {
+            cache.lastUpdated.bind(cache, 'cache-cache', Date.now()).should.throw();
+        });
+
+        it('should set last updated if timestamp is supplied', function () {
+            var timestamp = Date.now();
+            cache.lastUpdated('js2', timestamp);
+            cache.lastUpdated('js2').should.equal(timestamp);
+        });
+    });
+
+    describe('cache.lastMtime()', function () {
+        it('should throw an exception if no cache name is supplied', function () {
+            cache.lastMtime.bind(cache).should.throw();
+        });
+
+        it('should throw an exception if cache doesn\'t exist', function () {
+            cache.lastMtime.bind(cache, 'cache-cache').should.throw();
+        });
+
+        it('should return undefined if no mtimes', function () {
+            should.not.exists(cache.lastMtime('js2'));
+        });
+
+        it('should return most recent modified time', function () {
+            var mtimeBase = Date.now();
+            createStream(10, mtimeBase)
+                .pipe(cache.save('js2'))
+                .pipe(assert.end(function () {
+                    cache.lastMtime('js2').should.be(mtimeBase + 9 * 1000);
+
+                    // Update
+                    createStream(1, mtimeBase + 10 * 1000)
+                        .pipe(cache.save('js2'))
+                        .pipe(assert.end(function () {
+                            cache.lastMtime('js2').should.be(mtimeBase + 10 * 1000);
+                            done();
+                        }));
+                }));
+        });
+    });
+
+    describe('cache.get()', function () {
+        it('should return full cache object if no cache name is supplied', function () {
+            cache.get().should.have.property('js');
+            cache.get().should.have.property('js2');
+        });
+
+        it('should return a cache object if cache exisits', function () {
+            cache.get('js').should.be.an.instanceOf(Cache);
+        })
+
+        it('should return undefined if cache doesn\'t exist', function () {
+            should.not.exist(cache.get('cache-cache'));
         });
     });
 });
 
-function makeFile(path, contents) {
+function makeFile(path, contents, mtime) {
+    var stat = mtime ? {mtime: mtime} : undefined;
     return new File({
         path: path,
-        contents: new Buffer(contents || 'what can I say? I create a function taking two arguments, and you don\'t even bother supplying the seconds one...')
+        contents: new Buffer(contents || 'what can I say? I create a function taking two arguments, and you don\'t even bother supplying the seconds one...'),
+        stat: stat
     });
 }
 
-function createStream(numFiles) {
+function createStream(numFiles, mtimeBase) {
     var files = Array.apply(null, new Array(numFiles)).map(function (data, index) {
-        return makeFile('file-' + index + '.js', 'File number ' + index);
+        var mtime = mtimeBase ? mtimeBase + index * 1000 : false;
+        return makeFile('file-' + index + '.js', 'File number ' + index, mtime);
     });
 
     return array(files);

@@ -6,6 +6,7 @@ module.exports.save         = saveToCache;
 module.exports.forget       = removeFromCache;
 module.exports.update       = updateFromEvent;
 module.exports.lastUpdated  = lastUpdated;
+module.exports.lastMtime    = lastMtime;
 module.exports.get          = getCache;
 
 var cache = {};
@@ -14,9 +15,7 @@ var cache = {};
  * Save to cache files
  */
 function saveToCache(cacheName, compress) {
-    if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name to save to was supplied');
-    }
+    error(!cacheName, 'No cache name to save to was supplied');
 
     if (!cache[cacheName]) {
         // TODO: compression option
@@ -24,9 +23,7 @@ function saveToCache(cacheName, compress) {
     }
 
     return through.obj(function (file, enc, cb) {
-        if (file.isStream()) {
-            throw new Error('[gulp-memory-cache] Streams are not supported. Use buffered contents instead.');
-        }
+        error(file.isStream(), 'Streams are not supported. Use buffered contents instead.');
 
         cache[cacheName].save(file);
         cb(null, file);
@@ -39,9 +36,8 @@ function saveToCache(cacheName, compress) {
 function saveAndRetrieveFromCache(cacheName, save) {
     // By default save to cache
     save = save === undefined ? true : !!save;
-    if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name was supplied');
-    }
+
+    error(!cacheName, 'No cache name was supplied');
 
     if (!cache[cacheName]) {
         // TODO: compression option
@@ -71,13 +67,8 @@ function saveAndRetrieveFromCache(cacheName, save) {
  * Remove file from cache
  */
 function removeFromCache(cacheName, filePath) {
-    if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name to remove from was supplied');
-    }
-
-    if (!filePath) {
-        throw new Error('[gulp-memory-cache] No cache name to retrieve was supplied');
-    }
+    error(!cacheName, 'No cache name to remove from was supplied');
+    error(!filePath, 'No cache name to retrieve was supplied');
 
     cache[cacheName].remove(filePath);
 }
@@ -86,9 +77,7 @@ function removeFromCache(cacheName, filePath) {
  * Remove file on change
  */
 function updateFromEvent(cacheName) {
-    if (!cacheName) {
-        throw new Error('[gulp-memory-cache] No cache name was supplied when calling cache.update()');
-    }
+    error(!cacheName, 'No cache name was supplied when calling cache.update()');
 
     return function (evt) {
         if (evt.type === 'deleted') {
@@ -102,10 +91,25 @@ function updateFromEvent(cacheName) {
  * Get last time a cache was updated
  */
 function lastUpdated(cacheName, timestamp) {
+    error(!cacheName, 'No cache name to get / update last updated from');
+
     if (timestamp === undefined) {
-        return cache[cacheName].lastUpdated;
+        return cache[cacheName] ? cache[cacheName].lastUpdated : undefined;
     }
+
+    error(!cache[cacheName], 'Cache name ' + cacheName + ' to update last updated timestamp from doesn\'t exist');
+
     cache[cacheName].lastUpdated = timestamp;
+};
+
+/**
+ * Get the most recently modified time from files in cache
+ */
+function lastMtime(cacheName) {
+    error(!cacheName, 'No cache name to get most recent mtime from');
+    error(!cache[cacheName], 'Cache name ' + cacheName + ' to get most recent mtime from doesn\'t exist');
+
+    return cache[cacheName].getMostRecentMtime();
 };
 
 /**
@@ -113,4 +117,13 @@ function lastUpdated(cacheName, timestamp) {
  */
 function getCache(cacheName) {
     return cacheName === undefined ? cache : cache[cacheName];
+}
+
+/**
+ * Throw an error if no cache name
+ */
+function error(condition, msg) {
+    if (condition) {
+        throw new Error('[gulp-memory-cache] ' + msg);
+    }
 }
