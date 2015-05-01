@@ -1,8 +1,12 @@
 {
   "name": "gulp-memory-cache",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A gulp plugin to cache files in memory",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "scripts": {
     "test": "./node_modules/mocha/bin/_mocha",
     "test-cover": " ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
@@ -14,9 +18,11 @@
   "keywords": [
     "gulp",
     "cache",
-    "memory"
+    "memory",
+    "build",
+    "incremental"
   ],
-  "author": "Thomas Roch",
+  "author": "Thomas Roch <thomas.c.roch@gmail.com> (http://blog.reactandbethankful.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/troch/gulp-memory-cache/issues"

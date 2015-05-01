@@ -1,7 +1,7 @@
 'use strict';
 
 var cache    = require('../');
-var Cache    = require('../cache');
+var Cache    = require('../lib/cache');
 var through  = require('through2');
 var should   = require('should');
 var File     = require('vinyl');

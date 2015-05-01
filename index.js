@@ -1,5 +1,5 @@
 var through = require('through2');
-var Cache   = require('./cache');
+var Cache   = require('./lib/cache');
 
 module.exports              = saveAndRetrieveFromCache;
 module.exports.save         = saveToCache;
