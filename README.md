@@ -6,7 +6,7 @@
 
 A [gulp](https://github.com/gulpjs/gulp) plugin for caching files in memory to help with incremental building.
 
-It is aimed to be used with Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful.com/).
+It is aimed to be used with Gulp 4, see why: [Building with Gulp 4: Incremental builds](http://blog.reactandbethankful.com/posts/2015/05/01/building-with-gulp-4-part-4-incremental-builds/).
 
 If you are using Gulp 3, you will need to use `gulp-memory-cache` in combination with [`gulp-cached`](https://npmjs.com/package/gulp-cached) or similar.
 However be aware that both modules will maintain their own cache and therefore files are cached twice.
@@ -85,3 +85,8 @@ Returns the last time a cache was updated, can also be used in lieu of `gulp.las
 - `name` (optional): the cache name
 
 Return cache named `name`, or all cached data if `name` is not supplied.
+
+
+## Cache API
+
+`cache.get(cacheName)` returns a [Cache](https://github.com/troch/gulp-memory-cache/blob/master/lib/cache.js) object.
