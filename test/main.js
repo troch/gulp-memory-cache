@@ -149,8 +149,8 @@ describe('gulp-memory-cache', function () {
             cache.lastMtime.bind(cache).should.throw();
         });
 
-        it('should throw an exception if cache doesn\'t exist', function () {
-            cache.lastMtime.bind(cache, 'cache-cache').should.throw();
+        it('should return undefined if cache doesn\'t exist', function () {
+            should.not.exists(cache.lastMtime('cache-cache'));
         });
 
         it('should return undefined if no mtimes', function () {

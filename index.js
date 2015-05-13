@@ -97,7 +97,7 @@ function lastUpdated(cacheName, timestamp) {
         return cache[cacheName] ? cache[cacheName].lastUpdated : undefined;
     }
 
-    error(!cache[cacheName], 'Cache name ' + cacheName + ' to update last updated timestamp from doesn\'t exist');
+    error(!cache[cacheName], 'Cache name `' + cacheName + '` to update last updated timestamp from doesn\'t exist');
 
     cache[cacheName].lastUpdated = timestamp;
 };
@@ -107,9 +107,8 @@ function lastUpdated(cacheName, timestamp) {
  */
 function lastMtime(cacheName) {
     error(!cacheName, 'No cache name to get most recent mtime from');
-    error(!cache[cacheName], 'Cache name ' + cacheName + ' to get most recent mtime from doesn\'t exist');
 
-    return cache[cacheName].getMostRecentMtime();
+    return cache[cacheName] ? cache[cacheName].getMostRecentMtime() : undefined;
 };
 
 /**
