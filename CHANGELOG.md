@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.2] - 2015-05-13
+## [0.2.0] - 2015-05-13
 
 - Add file path transformation function `fn` optional argument to `.update()` and `.forget()`
 
