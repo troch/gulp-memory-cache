@@ -66,22 +66,23 @@ function saveAndRetrieveFromCache(cacheName, save) {
 /**
  * Remove file from cache
  */
-function removeFromCache(cacheName, filePath) {
+function removeFromCache(cacheName, filePath, fn) {
     error(!cacheName, 'No cache name to remove from was supplied');
     error(!filePath, 'No cache name to retrieve was supplied');
 
+    filePath = fn ? fn(filePath) : filePath;
     cache[cacheName].remove(filePath);
 }
 
 /**
  * Remove file on change
  */
-function updateFromEvent(cacheName) {
+function updateFromEvent(cacheName, fn) {
     error(!cacheName, 'No cache name was supplied when calling cache.update()');
 
     return function (evt) {
         if (evt.type === 'deleted') {
-            removeFromCache(cacheName, evt.path);
+            removeFromCache(cacheName, evt.path, fn);
         }
         // TODO: clever insersion in cache to preserve natural file order?
     };

@@ -95,6 +95,13 @@ describe('gulp-memory-cache', function () {
         it ('should not throw an error when removing a file which is not in cache', function () {
             cache.forget.bind(cache, 'js2', 'file-undefined.js').should.not.throw();
         });
+
+        it ('should accept a file path transformation function', function () {
+            cache.forget('js2', 'file-0.js', function (fp) {
+                return fp.replace(/-0.js$/, '-3.js');
+            });
+            cache.get('js2').getFilePaths().should.not.containEql('file-3.js');
+        });
     });
 
     describe('cache.update()', function () {

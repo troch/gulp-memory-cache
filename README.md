@@ -54,19 +54,30 @@ Saves streamed files to cache with name `name`. Useful if you want to save
 in a pipeline for retrieving later (in the same or another pipeline).
 
 
-### cache.forget(name, filePath)
+### cache.forget(name, filePath[, fn])
 
 - `name` (required): the cache name
 - `filePath` (required): the file path
+- `fn`: a file path transformation function
 
-Remove from cache `name` file with path `filePath`.
+Remove from cache `name` file with path `filePath`. `fn` is a file path transformation function (see below for
+an example with `cache.update()`.
 
-### cache.update(name)
+### cache.update(name[, fn])
 
 - `name` (required): the cache name
+- `fn`: a file path transformation function
 
 To use in `watch.on('change', ...)` in order to avoid boilerplate code. It will automatically remove files which have
-been deleted from cache `name`.
+been deleted from cache `name`. `fn` is a function to transform a file path and can be useful for removing
+a file from cache which name has been altered by a gulp plugin.
+
+```
+gulp.watch('src/**/*.tpl.html', gulp.series('bundlePartials'))
+    .on('change', cache.update('partials', function (filePath) {
+        return filePath.replace(/.html$/, '.js')
+    }));
+```
 
 ### cache.lastMtime(name)
 

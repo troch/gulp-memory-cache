@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.2] - 2015-05-13
+
+- Add file path transformation function `fn` optional argument to `.update()` and `.forget()`
+
 ## [0.1.1] - 2015-05-13
 
 - Remove Exception when calling `.lastMtime(cacheName)` if `cacheName` doesn't exist (return undefined instead).
