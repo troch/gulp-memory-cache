@@ -1,8 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2015-10-13
+
+- Add `.flush(cacheName)` method.
+
 ## [0.2.0] - 2015-05-13
 
-- Add file path transformation function `fn` optional argument to `.update()` and `.forget()`
+- Add file path transformation function `fn` optional argument to `.update()` and `.forget()`.
 
 ## [0.1.1] - 2015-05-13
 
