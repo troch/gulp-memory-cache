@@ -3,6 +3,7 @@ var Cache   = require('./lib/cache');
 
 module.exports              = saveAndRetrieveFromCache;
 module.exports.save         = saveToCache;
+module.exports.flush        = flushCache;
 module.exports.forget       = removeFromCache;
 module.exports.update       = updateFromEvent;
 module.exports.lastUpdated  = lastUpdated;
@@ -63,12 +64,18 @@ function saveAndRetrieveFromCache(cacheName, save) {
     return through.obj(saveOrIgnore, addFilesFromCache);
 }
 
+function flushCache(cacheName) {
+    error(!cacheName, 'No cache name to flush was supplied');
+
+    cache[cacheName].flush();
+}
+
 /**
  * Remove file from cache
  */
 function removeFromCache(cacheName, filePath, fn) {
     error(!cacheName, 'No cache name to remove from was supplied');
-    error(!filePath, 'No cache name to retrieve was supplied');
+    error(!filePath, 'No fileName to remove from cache ' + cacheName + ' was supplied');
 
     filePath = fn ? fn(filePath) : filePath;
     cache[cacheName].remove(filePath);

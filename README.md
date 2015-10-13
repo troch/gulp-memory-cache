@@ -53,6 +53,11 @@ If `save` is truthy, it will save (update) streamed files to cache with name `na
 Saves streamed files to cache with name `name`. Useful if you want to save
 in a pipeline for retrieving later (in the same or another pipeline).
 
+### cache.flush(name)
+
+- `name` (required): the cache name
+
+Flush (remove all files) cache `name`. Handy to force a stream to process again all its files.
 
 ### cache.forget(name, filePath[, fn])
 

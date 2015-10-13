@@ -82,6 +82,19 @@ describe('gulp-memory-cache', function () {
         });
     });
 
+    describe('cache.flush()', function () {
+        it('should flush files from cache', function (done) {
+            createStream(5)
+                .pipe(cache('jsFlushed'))
+                .pipe(assert.length(5))
+                .pipe(assert.end(function () {
+                    cache.flush('jsFlushed');
+                    cache.get('jsFlushed').cache.should.eql({});
+                    done();
+                }));
+        });
+    });
+
     describe('cache.forget()', function () {
         it('should throw an exception if no cache name is supplied', function () {
             cache.forget.bind(cache).should.throw();
